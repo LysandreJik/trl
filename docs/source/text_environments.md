@@ -78,6 +78,12 @@ Now let's have a look how we can create a new text environment!
 
 
 ```python
+from trl import TextEnvironment
+from transformers import AutoModelForCausalLM, AutoTokenizer, load_tool
+
+tokenizer = AutoTokenizer.from_pretrained("...")
+model = AutoModelForCausalLM.from_pretrained("...")
+
 prompt = """\
 What is 13-3?
 <request><SimpleCalculatorTool>13-3<call>10.0<response>
@@ -89,14 +95,14 @@ def reward_fn(result, answer):
     result_parsed = result.split("=")[1].split("<")[0]
     return int(result_parsed==answer)
 
-text_env = TextEnvironemnt(
+text_env = TextEnvironment(
     model=model, 
     tokenizer=tokenizer,
     tools= {"SimpleCalculatorTool": load_tool("ybelkada/simple-calculator")},
     reward_fn=exact_match_reward,
     prompt=prompt, 
-    max_turns=1
-    max_tool_response=100
+    max_turns=1,
+    max_tool_response=100,
     generation_kwargs={"do_sample": "true"}
 )
 ```
