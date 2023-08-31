@@ -42,6 +42,7 @@ class StringStoppingCriteria(StoppingCriteria):
             self.start_length = input_ids.shape[-1] - 1
             self.first_call = False
         decoded_generations = self.tokenizer.batch_decode(input_ids[:, self.start_length :])
+        self.generated_tokens = decoded_generation
         done = []
 
         for i, decoded_generation in enumerate(decoded_generations):
